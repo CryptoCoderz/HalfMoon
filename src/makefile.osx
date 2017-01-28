@@ -99,9 +99,9 @@ OBJS= \
     obj/noui.o \
     obj/pbkdf2.o \
     obj/kernel.o \
-    obj/scrypt_mine.o \
-    obj/scrypt-x86.o \
-    obj/scrypt-x86_64.o
+    obj/algorithm/scrypt_mine.o \
+    obj/algorithm/scrypt-x86.o \
+    obj/algorithm/scrypt-x86_64.o
 
 ifndef USE_UPNP
 	override USE_UPNP = -
