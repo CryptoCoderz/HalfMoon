@@ -32,10 +32,10 @@
 #include <xmmintrin.h>
 
 #include "scrypt_mine.h"
-#include "pbkdf2.h"
+#include "../pbkdf2.h"
 
-#include "util.h"
-#include "net.h"
+#include "../util.h"
+#include "../net.h"
 
 extern bool fShutdown;
 extern bool fGenerateBitcoins;
