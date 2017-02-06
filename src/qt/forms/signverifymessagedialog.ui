@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Signatures - Sign / Verify a Message</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(116, 116, 116);
+color: rgb(31, 31, 31);</string>
+  </property>
   <property name="modal">
    <bool>true</bool>
   </property>
@@ -48,7 +52,7 @@
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_SM">
            <property name="toolTip">
-            <string>The address to sign the message with (e.g. Hao1ga6xuKuQ7JV7M9rGDoxdbYwV5zgWN1)</string>
+            <string>The address to sign the message with (e.g. H7zzCFF4cvBWeBXjawFui1F9QibzaY9e8p)</string>
            </property>
            <property name="maxLength">
             <number>34</number>
@@ -251,7 +255,7 @@
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_VM">
            <property name="toolTip">
-            <string>The address the message was signed with (e.g. Hao1ga6xuKuQ7JV7M9rGDoxdbYwV5zgWN1)</string>
+            <string>The address the message was signed with (e.g. H7zzCFF4cvBWeBXjawFui1F9QibzaY9e8p)</string>
            </property>
            <property name="maxLength">
             <number>34</number>

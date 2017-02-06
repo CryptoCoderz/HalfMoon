@@ -45,9 +45,9 @@ QString BitcoinUnits::description(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("HalfMoon");
-    case mBTC: return QString("Milli-HalfMoon (1 / 1,000)");
-    case uBTC: return QString("Micro-HalfMoon (1 / 1,000,000)");
+    case BTC: return QString("HalfMoons");
+    case mBTC: return QString("Milli-HalfMoons (1 / 1,000)");
+    case uBTC: return QString("Micro-HalfMoons (1 / 1,000,000)");
     default: return QString("???");
     }
 }
@@ -67,9 +67,9 @@ int BitcoinUnits::amountDigits(int unit)
 {
     switch(unit)
     {
-    case BTC: return 14;  // 21,000,000,000,000 (# digits, without commas)
-    case mBTC: return 17; // 21,000,000,000,000,000
-    case uBTC: return 20; // 21,000,000,000,000,000,000
+    case BTC: return 12;  // 210,000,000,000 (# digits, without commas)
+    case mBTC: return 15; // 210,000,000,000,000
+    case uBTC: return 18; // 210,000,000,000,000,000
     default: return 0;
     }
 }
@@ -78,8 +78,8 @@ int BitcoinUnits::decimals(int unit)
 {
     switch(unit)
     {
-    case BTC: return 5;
-    case mBTC: return 3;
+    case BTC: return 6;
+    case mBTC: return 2;
     case uBTC: return 0;
     default: return 0;
     }

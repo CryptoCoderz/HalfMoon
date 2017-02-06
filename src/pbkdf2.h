@@ -1,4 +1,4 @@
-
+// Copyright (c) 2013 HalfMoon Developers
 
 #ifndef PBKDF2_H
 #define PBKDF2_H

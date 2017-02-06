@@ -8,13 +8,6 @@
 #include "transactionfilterproxy.h"
 #include "guiutil.h"
 #include "guiconstants.h"
-#include "askpassphrasedialog.h"
-#include "wallet.h"
-#include "init.h"
-#include "qt/qcustomplot.h"
-#include "main.h"
-#include "bitcoinrpc.h"
-#include "util.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -124,68 +117,6 @@ OverviewPage::OverviewPage(QWidget *parent) :
     showOutOfSyncWarning(true);
 }
 
-void OverviewPage::updatePlot(int count)
-{
-    // Double Check to make sure we don't try to update the plot when it is disabled
-    if(!GetBoolArg("-chart", true)) { return; }
-
-    //if(fDebug) { printf("Plot: Getting Ready: pidnexBest: %p\n", pindexBest); }
-
-    int numLookBack = 2000;
-    double diffMax = 0;
-    CBlockIndex* pindex = pindexBest;
-    int height = nBestHeight;
-    int xStart = std::max<int>(height-numLookBack, 0) + 1;
-    int xEnd = height;
-
-    // Start at the end and walk backwards
-    int i = numLookBack-1;
-    int x = xEnd;
-
-    // This should be a noop if the size is already 2000
-    vX.resize(numLookBack);
-    vY.resize(numLookBack);
-
-
-    //if(fDebug) {
-    //    if(height != pindex->nHeight) {
-    //        printf("Plot: Warning: nBestHeight and pindexBest->nHeight don't match: %d:%d:\n", height, pindex->nHeight);
-    //    }
-    //}
-
-    //if(fDebug) { printf("Plot: Reading blockchain\n"); }
-
-    CBlockIndex* itr = pindex;
-    while(i >= 0 && itr != NULL)
-    {
-        if(fDebug) { printf("Plot: Processing block: %d - pprev: %p\n", itr->nHeight, itr->pprev); }
-        vX[i] = itr->nHeight;
-        vY[i] = GetDifficulty(itr);
-        diffMax = std::max<double>(diffMax, vY[i]);
-
-        itr = itr->pprev;
-        i--;
-        x--;
-    }
-
-    //if(fDebug) { printf("Plot: Drawing plot\n"); }
-
-    ui->diffplot->graph(0)->setData(vX, vY);
-
-    // set axes ranges, so we see all data:
-    ui->diffplot->xAxis->setRange((double)xStart, (double)xEnd);
-    ui->diffplot->yAxis->setRange(0, diffMax+(diffMax/10));
-
-    ui->diffplot->xAxis->setAutoSubTicks(false);
-    ui->diffplot->yAxis->setAutoSubTicks(false);
-    ui->diffplot->xAxis->setSubTickCount(0);
-    ui->diffplot->yAxis->setSubTickCount(0);
-
-    ui->diffplot->replot();
-
-    //if(fDebug) { printf("Plot: Done!\n"); }
-}
-
 void OverviewPage::handleTransactionClicked(const QModelIndex &index)
 {
     if(filter)
@@ -208,35 +139,13 @@ void OverviewPage::setBalance(qint64 balance, qint64 stake, qint64 unconfirmedBa
     ui->labelStake->setText(BitcoinUnits::formatWithUnit(unit, stake));
     ui->labelUnconfirmed->setText(BitcoinUnits::formatWithUnit(unit, unconfirmedBalance));
     ui->labelImmature->setText(BitcoinUnits::formatWithUnit(unit, immatureBalance));
+    ui->labelTotal->setText(BitcoinUnits::formatWithUnit(unit, balance + stake + unconfirmedBalance + immatureBalance));
 
     // only show immature (newly mined) balance if it's non-zero, so as not to complicate things
     // for the non-mining users
     bool showImmature = immatureBalance != 0;
     ui->labelImmature->setVisible(showImmature);
     ui->labelImmatureText->setVisible(showImmature);
-}
-
-void OverviewPage::setNumTransactions(int count)
-{
-    ui->labelNumTransactions->setText(QLocale::system().toString(count));
-}
-
-void OverviewPage::unlockWallet()
-{
-    if(model->getEncryptionStatus() == WalletModel::Locked)
-    {
-        AskPassphraseDialog dlg(AskPassphraseDialog::Unlock, this);
-        dlg.setModel(model);
-        if(dlg.exec() == QDialog::Accepted)
-        {
-            //ui->unlockWalletButton->setText(QString("Lock Wallet"));
-        }
-    }
-    else
-    {
-        model->setWalletLocked(true);
-        //ui->unlockWalletButton->setText(QString("Unlock Wallet"));
-    }
 }
 
 void OverviewPage::setModel(WalletModel *model)
@@ -250,6 +159,7 @@ void OverviewPage::setModel(WalletModel *model)
         filter->setLimit(NUM_ITEMS);
         filter->setDynamicSortFilter(true);
         filter->setSortRole(Qt::EditRole);
+        filter->setShowInactive(false);
         filter->sort(TransactionTableModel::Status, Qt::DescendingOrder);
 
         ui->listTransactions->setModel(filter);
@@ -259,23 +169,10 @@ void OverviewPage::setModel(WalletModel *model)
         setBalance(model->getBalance(), model->getStake(), model->getUnconfirmedBalance(), model->getImmatureBalance());
         connect(model, SIGNAL(balanceChanged(qint64, qint64, qint64, qint64)), this, SLOT(setBalance(qint64, qint64, qint64, qint64)));
 
-        setNumTransactions(model->getNumTransactions());
-        connect(model, SIGNAL(numTransactionsChanged(int)), this, SLOT(setNumTransactions(int)));
-
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+    }
 
-        // Unlock wallet button
-        /*
-        WalletModel::EncryptionStatus status = model->getEncryptionStatus();
-        if(status == WalletModel::Unencrypted)
-        {
-            ui->unlockWalletButton->setDisabled(true);
-        }
-        connect(ui->unlockWalletButton, SIGNAL(clicked()), this, SLOT(unlockWallet()));
-        */
-     }
-
-    // update the display unit, to not use the default ("ECC")
+    // update the display unit, to not use the default ("BTC")
     updateDisplayUnit();
 }
 

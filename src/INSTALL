@@ -1,0 +1,9 @@
+Building HalfMoon
+
+See doc/readme-qt.rst for instructions on building HalfMoon QT,
+the intended-for-end-users, nice-graphical-interface, reference
+implementation of HalfMoon.
+
+See doc/build-*.txt for instructions on building HalfMoond,
+the intended-for-services, no-graphical-interface, reference
+implementation of HalfMoon.

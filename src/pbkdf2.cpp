@@ -1,4 +1,4 @@
-
+// Copyright (c) 2013 HalfMoon Developers
 
 #include <string.h>
 #include "pbkdf2.h"

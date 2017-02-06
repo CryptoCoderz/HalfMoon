@@ -22,7 +22,6 @@
 #include "script.h"
 
 static const char* pszBase58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
 // Encode a byte sequence as a base58-encoded string
 inline std::string EncodeBase58(const unsigned char* pbegin, const unsigned char* pend)
 {
@@ -253,10 +252,10 @@ public:
     bool operator> (const CBase58Data& b58) const { return CompareTo(b58) >  0; }
 };
 
-/** base58-encoded Bitcoin addresses.
- * Public-key-hash-addresses have version 0 (or 111 testnet).
+/** base58-encoded addresses.
+ * Public-key-hash-addresses have version 25 (or 111 testnet).
  * The data vector contains RIPEMD160(SHA256(pubkey)), where pubkey is the serialized public key.
- * Script-hash-addresses have version 5 (or 196 testnet).
+ * Script-hash-addresses have version 85 (or 196 testnet).
  * The data vector contains RIPEMD160(SHA256(cscript)), where cscript is the serialized redemption script.
  */
 class CBitcoinAddress;
@@ -277,7 +276,7 @@ public:
     enum
     {
         PUBKEY_ADDRESS = 40,  // HalfMoon: address begin with 'H'
-        SCRIPT_ADDRESS = 11, 
+        SCRIPT_ADDRESS = 11,
         PUBKEY_ADDRESS_TEST = 41,
         SCRIPT_ADDRESS_TEST = 111,
     };

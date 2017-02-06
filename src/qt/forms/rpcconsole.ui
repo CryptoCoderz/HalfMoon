@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>HalfMoon - Debug window</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(116, 116, 116);
+color: rgb(31, 31, 31);</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QTabWidget" name="tabWidget">

@@ -2,9 +2,9 @@
 #define WALLETMODEL_H
 
 #include <QObject>
-#include <QMap>
 #include <vector>
 #include <map>
+
 #include "allocators.h" /* for SecureString */
 
 class OptionsModel;
@@ -117,13 +117,15 @@ public:
     };
 
     UnlockContext requestUnlock();
-   bool getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
+
+    bool getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
     void getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs);
     void listCoins(std::map<QString, std::vector<COutput> >& mapCoins) const;
     bool isLockedCoin(uint256 hash, unsigned int n) const;
     void lockCoin(COutPoint& output);
     void unlockCoin(COutPoint& output);
     void listLockedCoins(std::vector<COutPoint>& vOutpts);
+
 private:
     CWallet *wallet;
 
@@ -133,7 +135,6 @@ private:
 
     AddressTableModel *addressTableModel;
     TransactionTableModel *transactionTableModel;
-    QMap<QString, WalletModel*> mapWalletViews;
 
     // Cache some values to be able to detect changes
     qint64 cachedBalance;
@@ -160,8 +161,6 @@ public slots:
     void updateAddressBook(const QString &address, const QString &label, bool isMine, int status);
     /* Current, immature or unconfirmed balance might have changed - emit 'balanceChanged' if so */
     void pollBalanceChanged();
-    /** Update the plot on the overview (home) page */
-    void updatePlot(int count);
 
 signals:
     // Signal that balance in wallet changed
